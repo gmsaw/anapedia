@@ -262,6 +262,14 @@
             max-width: 500px;
             margin: 0 auto;
         }
+
+        /* Photobooth image styling */
+        .polaroid img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body class="text-gray-800 antialiased overflow-x-hidden selection:bg-rose-200 selection:text-rose-900 font-sans">
@@ -276,6 +284,7 @@
         <div class="bg-slide" style="background-image: url('./img/7.JPG');"></div>
         <div class="bg-slide" style="background-image: url('./img/8.JPG');"></div>
         <div class="bg-slide" style="background-image: url('./img/9.jpg');"></div>
+        <div class="bg-slide" style="background-image: url('./img/10.jpg');"></div>
     </div>
     
     <div class="bg-overlay" id="main-overlay"></div>
@@ -526,54 +535,40 @@
                     <h3 class="font-script text-5xl text-rose-400 mb-2">Photobooth</h3>
                     <div class="h-1 w-20 bg-rose-200 mx-auto rounded-full"></div>
                     <p class="font-hand text-gray-500 mt-4 text-xl">potongan kebahagiaan kita</p>
-                    <button onclick="downloadAllPhotosAsFrame()" class="mt-6 bg-rose-500 text-white px-8 py-3 rounded-full text-sm font-sans font-bold hover:bg-rose-600 transition shadow-lg hover:shadow-rose-200/50 transform hover:-translate-y-1">
+                    <!-- <button onclick="downloadAllPhotosAsFrame()" class="mt-6 bg-rose-500 text-white px-8 py-3 rounded-full text-sm font-sans font-bold hover:bg-rose-600 transition shadow-lg hover:shadow-rose-200/50 transform hover:-translate-y-1">
                         <i class="fas fa-download mr-2"></i>Download Semua dalam 1 Frame
-                    </button>
+                    </button> -->
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 auto-rows-min" id="photobooth-grid">
                     
                     <div class="polaroid" style="--rot: -2deg" data-photo-idx="1">
-                        <div class="aspect-square bg-gradient-to-br from-rose-100 to-pink-100 rounded-sm flex items-center justify-center text-6xl text-rose-300">
-                            <img src="./img/3.jpg">
+                        <div class="aspect-square bg-gradient-to-br from-rose-100 to-pink-100 rounded-sm flex items-center justify-center overflow-hidden">
+                            <img src="./img/3.jpg" class="w-full h-full object-cover">
                         </div>
                         <div class="photo-badge">🌸 "Kamu mau jadi pacar aku?"</div>
                     </div>
                     
                     <div class="polaroid" style="--rot: 3deg" data-photo-idx="2">
-                        <div class="aspect-square bg-gradient-to-br from-blue-100 to-cyan-100 rounded-sm flex items-center justify-center text-6xl text-blue-300">
-                            <img src="./img/2.jpg">
+                        <div class="aspect-square bg-gradient-to-br from-blue-100 to-cyan-100 rounded-sm flex items-center justify-center overflow-hidden">
+                            <img src="./img/2.jpg" class="w-full h-full object-cover">
                         </div>
                         <div class="photo-badge">💐 Bunga Pertama</div>
                     </div>
 
                     <div class="polaroid" style="--rot: 1deg" data-photo-idx="3">
-                        <div class="aspect-square bg-gradient-to-br from-amber-100 to-yellow-100 rounded-sm flex items-center justify-center text-6xl text-amber-300">
-                            <img src="./img/1.jpg">
+                        <div class="aspect-square bg-gradient-to-br from-amber-100 to-yellow-100 rounded-sm flex items-center justify-center overflow-hidden">
+                            <img src="./img/10.jpg" class="w-full h-full object-cover">
                         </div>
                         <div class="photo-badge">☕ Date Pertama</div>
                     </div>
 
                     <div class="polaroid" style="--rot: -3deg" data-photo-idx="4">
-                        <div class="aspect-square bg-gradient-to-br from-emerald-100 to-teal-100 rounded-sm flex items-center justify-center text-6xl text-emerald-300">
-                            <img src="./img/ss2.jpg">
+                        <div class="aspect-square bg-gradient-to-br from-emerald-100 to-teal-100 rounded-sm flex items-center justify-center overflow-hidden">
+                            <img src="./img/ss2.jpg" class="w-full h-full object-cover">
                         </div>
                         <div class="photo-badge">🌲 Support Kamu</div>
                     </div>
-
-                    <!-- <div class="polaroid col-span-2 md:col-span-1" style="--rot: 2deg" data-photo-idx="5">
-                        <div class="aspect-square bg-gradient-to-br from-pink-100 to-rose-100 rounded-sm flex items-center justify-center text-6xl text-pink-300">
-                            <i class="fas fa-cake-candles"></i>
-                        </div>
-                        <div class="photo-badge">🎂 ultah</div>
-                    </div>
-
-                    <div class="polaroid" style="--rot: -1deg" data-photo-idx="6">
-                        <div class="aspect-square bg-gradient-to-br from-indigo-100 to-purple-100 rounded-sm flex items-center justify-center text-6xl text-indigo-300">
-                            <i class="fas fa-music"></i>
-                        </div>
-                        <div class="photo-badge">🎶 konser</div>
-                    </div> -->
                 </div>
             </div>
 
@@ -659,7 +654,7 @@
 
     <script>
         // --- CONFIGURATION ---
-        const START_DATE = new Date("2025-12-06"); // Diubah sesuai chat pertama
+        const START_DATE = new Date("2025-12-06");
         document.getElementById('start-date-text').innerText = START_DATE.toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
 
         const SONGS = [
@@ -667,6 +662,7 @@
             { title: "bergema sampai selamanya", src: "./music/song2.mp3" },
             { title: "Perfect", src: "./music/song3.mp3" },
             { title: "Jantungati", src: "./music/song4.mp3" },
+            { title: "kota ini tak sama tanpamu", src: "./music/song5.mp3" },
         ];
 
         // --- VARIABLES ---
@@ -862,21 +858,27 @@
             slides[slideIdx].classList.add('active');
         }, 8000);
 
-        // --- DOWNLOAD ALL PHOTOS AS ONE FRAME ---
+        // --- PERBAIKAN: DOWNLOAD ALL PHOTOS AS ONE FRAME ---
         function downloadAllPhotosAsFrame() {
+            // Tampilkan loading alert
+            alert("Memproses gambar, mohon tunggu...");
+            
+            // Buat container frame sementara
             const frame = document.createElement('div');
             frame.style.position = 'relative';
             frame.style.width = '1200px';
             frame.style.height = '800px';
             frame.style.background = 'linear-gradient(135deg, #fffdf5, #fff)';
-            frame.style.padding = '40px';
+            frame.style.padding = '50px 40px 40px 40px';
             frame.style.display = 'grid';
-            frame.style.gridTemplateColumns = 'repeat(4, 1fr)';
+            frame.style.gridTemplateColumns = 'repeat(2, 1fr)'; // 2 kolom untuk 4 foto
             frame.style.gap = '30px';
             frame.style.alignItems = 'start';
             frame.style.justifyItems = 'center';
             frame.style.fontFamily = "'Patrick Hand', cursive";
+            frame.style.boxSizing = 'border-box';
             
+            // Judul frame
             const title = document.createElement('div');
             title.style.position = 'absolute';
             title.style.top = '20px';
@@ -886,49 +888,72 @@
             title.style.fontFamily = "'Sacramento', cursive";
             title.style.color = '#be123c';
             title.style.textShadow = '2px 2px 4px rgba(0,0,0,0.1)';
+            title.style.whiteSpace = 'nowrap';
             title.innerText = 'Our Photobooth Memories';
             frame.appendChild(title);
             
+            // Ambil semua foto dari grid
             const photos = document.querySelectorAll('.polaroid[data-photo-idx]');
             
+            // Gunakan Promise untuk memuat semua gambar
+            const imagePromises = [];
+            
             photos.forEach((photo, index) => {
-                const iconElement = photo.querySelector('.aspect-square i');
-                const iconClass = iconElement ? iconElement.className : '';
+                const imgElement = photo.querySelector('img');
                 const caption = photo.querySelector('.photo-badge')?.innerText || 'kenangan';
                 
+                // Buat elemen polaroid untuk frame
                 const polaroid = document.createElement('div');
                 polaroid.style.background = 'white';
-                polaroid.style.padding = '15px 15px 30px 15px';
+                polaroid.style.padding = '15px 15px 35px 15px';
                 polaroid.style.boxShadow = '0 15px 25px -8px rgba(190, 18, 60, 0.3)';
-                polaroid.style.transform = `rotate(${Math.random() * 6 - 3}deg)`;
+                polaroid.style.transform = `rotate(${Math.random() * 4 - 2}deg)`;
                 polaroid.style.borderRadius = '4px';
                 polaroid.style.width = '100%';
+                polaroid.style.maxWidth = '300px';
                 polaroid.style.border = '1px solid rgba(255,255,255,0.5)';
+                polaroid.style.margin = '0 auto';
                 
+                // Area foto dengan aspect ratio
                 const photoArea = document.createElement('div');
                 photoArea.style.aspectRatio = '1';
-                photoArea.style.background = `linear-gradient(135deg, ${getGradientColor(index)}, ${getGradientColor(index, true)})`;
+                photoArea.style.background = '#f3f4f6';
                 photoArea.style.borderRadius = '4px';
                 photoArea.style.display = 'flex';
                 photoArea.style.alignItems = 'center';
                 photoArea.style.justifyContent = 'center';
-                photoArea.style.fontSize = '60px';
-                photoArea.style.color = getIconColor(index);
+                photoArea.style.overflow = 'hidden';
                 
-                let iconChar = '📸';
-                if (iconClass.includes('camera-retro')) iconChar = '📷';
-                else if (iconClass.includes('umbrella-beach')) iconChar = '🏖️';
-                else if (iconClass.includes('mug-hot')) iconChar = '☕';
-                else if (iconClass.includes('tree')) iconChar = '🌲';
-                else if (iconClass.includes('cake-candles')) iconChar = '🎂';
-                else if (iconClass.includes('music')) iconChar = '🎵';
+                // Buat elemen gambar baru
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.src = imgElement?.src || '';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
                 
-                photoArea.innerText = iconChar;
+                // Simpan promise untuk gambar
+                const promise = new Promise((resolve) => {
+                    img.onload = () => {
+                        photoArea.appendChild(img);
+                        resolve();
+                    };
+                    img.onerror = () => {
+                        // Fallback jika gambar gagal dimuat
+                        photoArea.style.background = `linear-gradient(135deg, ${getGradientColor(index)}, ${getGradientColor(index, true)})`;
+                        photoArea.style.fontSize = '60px';
+                        photoArea.style.color = getIconColor(index);
+                        photoArea.innerText = getIconChar(index);
+                        resolve();
+                    };
+                });
+                imagePromises.push(promise);
                 
+                // Caption
                 const captionDiv = document.createElement('div');
                 captionDiv.style.textAlign = 'center';
                 captionDiv.style.marginTop = '10px';
-                captionDiv.style.fontSize = '16px';
+                captionDiv.style.fontSize = '14px';
                 captionDiv.style.color = '#6b7280';
                 captionDiv.style.fontFamily = "'Patrick Hand', cursive";
                 captionDiv.innerText = caption;
@@ -938,46 +963,65 @@
                 frame.appendChild(polaroid);
             });
             
+            // Tambahkan ke container hidden
             downloadContainer.innerHTML = '';
             downloadContainer.appendChild(frame);
             
-            import('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js').then(() => {
-                html2canvas(frame, {
-                    scale: 2,
-                    backgroundColor: '#fffdf5',
-                    logging: false,
-                    allowTaint: false,
-                    useCORS: true
-                }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = `photobooth-frame-${Date.now()}.png`;
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                    
+            // Tunggu semua gambar dimuat
+            Promise.all(imagePromises).then(() => {
+                // Gunakan html2canvas untuk capture
+                import('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js').then(() => {
+                    html2canvas(frame, {
+                        scale: 2,
+                        backgroundColor: '#fffdf5',
+                        logging: false,
+                        allowTaint: false,
+                        useCORS: true,
+                        imageTimeout: 0
+                    }).then(canvas => {
+                        // Download
+                        const link = document.createElement('a');
+                        link.download = `photobooth-frame-${Date.now()}.png`;
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                        
+                        // Bersihkan
+                        downloadContainer.innerHTML = '';
+                        
+                        // Confetti
+                        confetti({ particleCount: 50, spread: 70, origin: { y: 0.6 }, colors: ['#fda4af', '#f472b6'] });
+                    }).catch(err => {
+                        console.error('html2canvas error:', err);
+                        downloadContainer.innerHTML = '';
+                        alert('Gagal mendownload. Coba lagi nanti.');
+                    });
+                }).catch(err => {
+                    console.error('Failed to load html2canvas:', err);
                     downloadContainer.innerHTML = '';
-                    confetti({ particleCount: 50, spread: 70, origin: { y: 0.6 }, colors: ['#fda4af', '#f472b6'] });
+                    alert('Gagal memuat library. Periksa koneksi internet Anda.');
                 });
-            }).catch(err => {
-                console.error('html2canvas error:', err);
-                alert('Gagal mendownload. Coba lagi nanti.');
             });
-        }
 
-        function getGradientColor(index, isLight = false) {
-            const colors = [
-                ['#fce7f3', '#fbcfe8'],
-                ['#dbeafe', '#bfdbfe'],
-                ['#fef3c7', '#fde68a'],
-                ['#d1fae5', '#a7f3d0'],
-                ['#fce7f3', '#fbcfe8'],
-                ['#ede9fe', '#ddd6fe']
-            ];
-            return colors[index % colors.length][isLight ? 1 : 0];
-        }
+            // Helper functions
+            function getGradientColor(index, isLight = false) {
+                const colors = [
+                    ['#fce7f3', '#fbcfe8'],
+                    ['#dbeafe', '#bfdbfe'],
+                    ['#fef3c7', '#fde68a'],
+                    ['#d1fae5', '#a7f3d0']
+                ];
+                return colors[index % colors.length][isLight ? 1 : 0];
+            }
 
-        function getIconColor(index) {
-            const colors = ['#f472b6', '#60a5fa', '#f59e0b', '#10b981', '#ec4899', '#8b5cf6'];
-            return colors[index % colors.length];
+            function getIconColor(index) {
+                const colors = ['#f472b6', '#60a5fa', '#f59e0b', '#10b981'];
+                return colors[index % colors.length];
+            }
+
+            function getIconChar(index) {
+                const icons = ['📷', '🏖️', '☕', '🌲'];
+                return icons[index % icons.length];
+            }
         }
 
         window.addEventListener('click', function firstClick() {
