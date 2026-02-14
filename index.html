@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus & Cancer: Our Journey</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Patrick+Hand&family=Playfair+Display:ital,wght@1,500&family=Sacramento&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'hand': ['"Patrick Hand"', 'cursive'],
+                        'script': ['"Dancing Script"', 'cursive'],
+                        'fancy': ['"Sacramento"', 'cursive'],
+                        'serif': ['"Playfair Display"', 'serif'],
+                        'sans': ['"Montserrat"', 'sans-serif'],
+                    },
+                    colors: {
+                        'paper': '#fffdf5', 
+                        'rose-deep': '#be123c',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in': 'fadeIn 1.5s ease-out forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 20s linear infinite',
+                        'flip': 'flip 0.8s ease-in-out',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        flip: {
+                            '0%': { transform: 'rotateY(0deg)' },
+                            '50%': { transform: 'rotateY(180deg)' },
+                            '100%': { transform: 'rotateY(360deg)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- BACKGROUND SMOOTHNESS --- */
+        .bg-slide {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            opacity: 0; 
+            transform: scale(1.1);
+            transition: opacity 2s ease-in-out, transform 10s linear; 
+            z-index: -5;
+        }
+        .bg-slide.active { 
+            opacity: 1; 
+            transform: scale(1);
+        }
+        
+        .bg-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%), 
+                        linear-gradient(to bottom, rgba(40,0,20,0.1), rgba(255,253,245,0.9) 90%);
+            z-index: -4; pointer-events: none;
+            transition: opacity 1.5s ease;
+        }
+
+        /* --- MODAL SURAT (FIXED) --- */
+        .modal-bg {
+            position: fixed; inset: 0; 
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: all 0.5s ease;
+        }
+        .modal-bg.active {
+            opacity: 1; pointer-events: auto;
+        }
+        .modal-content {
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal-bg.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        /* --- THEATER MODE UTILS --- */
+        .theater-hidden {
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transform: scale(0.95);
+            transition: all 1s ease;
+        }
+
+        /* Scrollbar & Glass */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .glass {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+        
+        /* Typography */
+        .text-shadow { text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+
+        /* Photobooth Polaroid style - lebih cantik */
+        .polaroid {
+            background: white;
+            padding: 1rem 1rem 2.5rem 1rem;
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.2);
+            transform: rotate(var(--rot, 0deg));
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .polaroid:hover {
+            transform: rotate(0deg) scale(1.08) translateY(-8px);
+            z-index: 20;
+            box-shadow: 0 25px 35px -8px rgba(190, 18, 60, 0.3);
+        }
+        .polaroid .photo-badge {
+            position: absolute;
+            bottom: 8px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-family: 'Patrick Hand', cursive;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+        .polaroid::after {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background: #fecdd3;
+            border-radius: 2px;
+        }
+
+        /* Flip Card Styles */
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            height: 280px;
+            perspective: 2000px;
+            cursor: pointer;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            box-shadow: 0 15px 30px -10px rgba(190, 18, 60, 0.3);
+            border-radius: 24px;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 24px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .flip-card-front {
+            background: linear-gradient(135deg, #fbcfe8, #fdf2f8);
+            border: 2px solid white;
+        }
+        .flip-card-back {
+            background: linear-gradient(135deg, #fecdd3, #ffe4e6);
+            transform: rotateY(180deg);
+            border: 2px solid white;
+        }
+
+        /* Timeline photo container */
+        .timeline-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            object-fit: cover;
+            border: 3px solid white;
+            box-shadow: 0 8px 15px rgba(190, 18, 60, 0.15);
+            transition: transform 0.3s ease;
+        }
+        .timeline-photo:hover {
+            transform: scale(1.15) rotate(2deg);
+        }
+        
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #fda4af;
+            border-radius: 10px;
+        }
+
+        /* Download frame container */
+        #download-frame-container {
+            position: fixed;
+            top: -9999px;
+            left: -9999px;
+            width: 1200px;
+            height: 800px;
+            background: #fffdf5;
+            z-index: -9999;
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased overflow-x-hidden selection:bg-rose-200 selection:text-rose-900 font-sans">
+
+    <div id="bg-container">
+        <div class="bg-slide active" style="background-image: url('./img/1.jpg');"></div>
+        <div class="bg-slide" style="background-image: url('./img/2.jpg');"></div>
+        <div class="bg-slide" style="background-image: url('./img/3.jpg');"></div>
+        <div class="bg-slide" style="background-image: url('./img/4.jpg');"></div>
+        <div class="bg-slide" style="background-image: url('./img/5.jpg');"></div>
+        <div class="bg-slide" style="background-image: url('./img/6.JPG');"></div>
+        <div class="bg-slide" style="background-image: url('./img/7.JPG');"></div>
+        <div class="bg-slide" style="background-image: url('./img/8.JPG');"></div>
+    </div>
+    
+    <div class="bg-overlay" id="main-overlay"></div>
+
+    <div class="fixed top-6 left-6 z-40 transition-all duration-700" id="music-container">
+        <div class="glass rounded-full p-2 pr-6 flex items-center gap-4 shadow-lg hover:bg-white/60 transition group">
+            <button onclick="toggleAudio()" id="play-btn" class="w-12 h-12 bg-rose-500 text-white rounded-full flex items-center justify-center hover:scale-110 hover:bg-rose-600 transition shadow-md">
+                <i class="fas fa-play ml-1"></i>
+            </button>
+            <div class="flex flex-col text-rose-900 cursor-pointer group-hover:text-rose-700" onclick="togglePlaylist()">
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] uppercase tracking-[0.2em] font-sans font-bold opacity-70">Music</span>
+                </div>
+                <span id="mini-title" class="text-base font-hand font-bold leading-none mt-1 truncate w-32">Pilih Lagu...</span>
+            </div>
+        </div>
+        
+        <div id="playlist-box" class="hidden mt-3 bg-white/90 backdrop-blur-xl rounded-2xl p-4 w-64 shadow-2xl border border-white/50 animate-fade-in origin-top-left">
+            <ul id="playlist-ul" class="space-y-2 text-sm font-sans text-gray-700 max-h-48 overflow-y-auto no-scrollbar"></ul>
+        </div>
+    </div>
+
+    <button onclick="toggleTheaterMode()" id="exit-theater-btn" class="fixed bottom-8 right-8 z-50 text-white/50 hover:text-white px-6 py-2 rounded-full hidden hover:bg-black/30 transition-all duration-300 flex items-center gap-3 backdrop-blur-sm border border-transparent hover:border-white/20">
+        <span class="text-xs uppercase tracking-widest font-sans">Exit Focus</span>
+        <i class="fas fa-compress"></i> 
+    </button>
+
+    <div id="content-wrapper" class="relative w-full transition-all duration-1000">
+        
+        <section class="min-h-screen flex flex-col items-center justify-center text-center p-6 relative">
+            <div class="animate-float">
+                <div class="glass px-6 py-2 rounded-full inline-block mb-6">
+                    <h2 class="font-serif text-rose-950 text-xs md:text-sm tracking-[0.3em] uppercase font-bold">The Love Story of</h2>
+                </div>
+                <h1 class="font-fancy text-7xl md:text-9xl text-rose-600 drop-shadow-lg mb-6 leading-tight text-shadow">
+                    Taurus <span class="text-white font-script text-5xl md:text-7xl mx-2 text-shadow">&</span> Cancer
+                </h1>
+            </div>
+            
+            <p class="font-hand text-xl md:text-2xl text-rose-900 max-w-lg mt-2 bg-white/40 backdrop-blur-md p-6 rounded-2xl border border-white/40 shadow-sm">
+                "Setiap detik bersamamu adalah halaman favorit dalam buku hidupku."
+            </p>
+            
+            <button onclick="toggleTheaterMode()" class="mt-8 group glass px-8 py-3 rounded-full text-rose-900 font-bold hover:bg-white/60 transition flex items-center gap-3 shadow-sm hover:shadow-lg">
+                <i class="fas fa-expand text-rose-600 group-hover:scale-110 transition"></i>
+                <span class="font-sans text-xs uppercase tracking-widest">Mode Fokus</span>
+            </button>
+
+            <div class="absolute bottom-10 animate-pulse-slow text-rose-800 opacity-80 flex flex-col items-center gap-2 cursor-pointer" onclick="document.getElementById('journal').scrollIntoView({behavior: 'smooth'})">
+                <span class="text-[10px] uppercase tracking-widest font-sans">Scroll Down</span>
+                <i class="fas fa-chevron-down text-xl"></i>
+            </div>
+        </section>
+
+        <div id="journal" class="bg-paper min-h-screen relative rounded-t-[60px] shadow-[0_-20px_60px_rgba(0,0,0,0.15)] pt-24 px-4 md:px-20 pb-40 z-10 border-t border-white/50">
+            
+            <!-- Timer Section -->
+            <div class="max-w-5xl mx-auto text-center mb-32">
+                <h3 class="font-script text-6xl text-rose-500 mb-4">Perjalanan Kita</h3>
+                <p class="text-gray-400 font-sans text-xs uppercase tracking-widest mb-12">Bersama sejak <span id="start-date-text" class="text-rose-400 font-bold border-b border-rose-200 pb-1"></span></p>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 text-rose-900">
+                    <div class="bg-white p-6 rounded-3xl shadow-lg border border-rose-50 hover:-translate-y-2 transition duration-300 group">
+                        <span id="t-years" class="text-5xl font-serif font-bold block mb-1 group-hover:text-rose-600 transition">0</span>
+                        <span class="text-[10px] uppercase tracking-widest opacity-50 font-sans">Tahun</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl shadow-lg border border-rose-50 hover:-translate-y-2 transition duration-300 group">
+                        <span id="t-days" class="text-5xl font-serif font-bold block mb-1 group-hover:text-rose-600 transition">0</span>
+                        <span class="text-[10px] uppercase tracking-widest opacity-50 font-sans">Hari</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl shadow-lg border border-rose-50 hover:-translate-y-2 transition duration-300 group">
+                        <span id="t-hours" class="text-5xl font-serif font-bold block mb-1 group-hover:text-rose-600 transition">0</span>
+                        <span class="text-[10px] uppercase tracking-widest opacity-50 font-sans">Jam</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl shadow-lg border border-rose-50 hover:-translate-y-2 transition duration-300 group">
+                        <span id="t-minutes" class="text-5xl font-serif font-bold block mb-1 group-hover:text-rose-600 transition">0</span>
+                        <span class="text-[10px] uppercase tracking-widest opacity-50 font-sans">Menit</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ZODIAC SECTION -->
+            <div class="max-w-3xl mx-auto mb-32 relative group">
+                <div class="absolute -inset-4 bg-gradient-to-r from-rose-100 via-purple-50 to-rose-100 rounded-[3rem] blur-xl opacity-50 group-hover:opacity-80 transition duration-1000"></div>
+                <div class="relative bg-white/80 backdrop-blur-sm rounded-[2.5rem] p-10 md:p-14 text-center shadow-2xl border border-white">
+                    <h2 class="font-serif text-3xl mb-10 text-gray-800 italic">"Ketika Bumi bertemu Bulan"</h2>
+                    
+                    <div class="flex items-center justify-center gap-8 md:gap-16 mb-10">
+                        <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 rounded-full bg-green-50 flex items-center justify-center text-5xl mb-3 shadow-inner text-green-700">♉</div>
+                            <span class="font-bold text-gray-400 font-sans text-[10px] tracking-[0.2em] uppercase">Taurus</span>
+                        </div>
+                        <div class="text-4xl text-rose-300 animate-pulse">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 rounded-full bg-blue-50 flex items-center justify-center text-5xl mb-3 shadow-inner text-blue-700">♋</div>
+                            <span class="font-bold text-gray-400 font-sans text-[10px] tracking-[0.2em] uppercase">Cancer</span>
+                        </div>
+                    </div>
+
+                    <button onclick="revealZodiac()" id="zodiac-btn" class="bg-gray-900 text-white font-sans text-xs tracking-widest font-bold py-4 px-10 rounded-full shadow-lg hover:shadow-2xl hover:bg-rose-600 transition transform hover:-translate-y-1">
+                        CEK KECOCOKAN
+                    </button>
+
+                    <div id="zodiac-result" class="hidden mt-8">
+                        <div class="text-8xl font-script text-rose-500 mb-2 drop-shadow-sm" id="percentage">0%</div>
+                        <h3 class="text-lg font-serif font-bold text-gray-800 tracking-wide uppercase">Soulmate Alert</h3>
+                        <p class="font-hand text-xl text-gray-600 mt-4 max-w-md mx-auto leading-relaxed">
+                            "Keras kepalanya Taurus luluh oleh lembutnya Cancer. Kombinasi yang saling melengkapi dengan sempurna."
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW: FLIP CARD KEJUTAN -->
+            <div class="max-w-md mx-auto mb-32">
+                <div class="text-center mb-8">
+                    <h3 class="font-script text-5xl text-rose-400 mb-2">Kejutan Spesial</h3>
+                    <div class="h-1 w-16 bg-rose-200 mx-auto rounded-full"></div>
+                    <p class="font-hand text-gray-500 mt-4">klik kartunya untuk membuka pesan rahasia</p>
+                </div>
+                
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <i class="fas fa-question text-6xl text-rose-300 mb-4"></i>
+                            <h4 class="font-script text-4xl text-rose-600">?</h4>
+                            <p class="font-hand text-gray-500 mt-4">ada sesuatu di balik ini...</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <i class="fas fa-heart text-5xl text-rose-500 mb-4 animate-pulse"></i>
+                            <h4 class="font-script text-4xl text-rose-700">I Love You</h4>
+                            <p class="font-hand text-gray-700 mt-4 text-center">Terima kasih sudah menjadi alasan aku tersenyum setiap hari. Kamu adalah kejutan terindah dalam hidupku. 💕</p>
+                            <div class="mt-4 text-rose-400 text-sm">♉ + ♋ = ∞</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TIMELINE SECTION WITH PHOTO CONTAINERS -->
+            <div class="max-w-4xl mx-auto mb-32">
+                <div class="text-center mb-16">
+                    <h3 class="font-script text-5xl text-rose-400 mb-2">Our Timeline</h3>
+                    <div class="h-1 w-24 bg-rose-200 mx-auto rounded-full"></div>
+                    <p class="font-hand text-gray-500 mt-4 text-xl">setiap momen adalah cerita</p>
+                </div>
+
+                <div class="space-y-12 relative before:absolute before:left-4 md:before:left-1/2 before:transform md:before:-translate-x-1/2 before:h-full before:w-[2px] before:bg-rose-200 before:rounded-full">
+                    
+                    <!-- Timeline Item 1 -->
+                    <div class="relative flex flex-col md:flex-row items-start gap-6 md:gap-12 group">
+                        <div class="hidden md:block w-1/2 text-right pr-8">
+                            <span class="text-xs font-sans font-bold tracking-widest text-rose-300">06 DES 2024</span>
+                            <h4 class="font-serif text-2xl text-gray-700 mt-2">Pertama Bertemu</h4>
+                            <p class="font-hand text-gray-500 mt-2">di sudut kafe, hujan di luar, hangat di dalam.</p>
+                            <div class="mt-4 flex justify-end">
+                                <img src="https://placehold.co/80x80/fce7f3/f472b6?text=✨" class="timeline-photo" alt="foto kenangan" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22><rect width=%2280%22 height=%2280%22 fill=%22%23fce7f3%22/><text x=%2220%22 y=%2245%22 font-family=%22Arial%22 font-size=%2220%22 fill=%22%23f472b6%22>📸</text></svg>'">
+                            </div>
+                        </div>
+                        <div class="relative pl-12 md:pl-0 md:w-1/2">
+                            <div class="timeline-dot group-hover:scale-150 group-hover:bg-rose-400 transition-all"></div>
+                            <div class="bg-white p-6 rounded-2xl shadow-lg border border-rose-50 hover:shadow-xl transition">
+                                <span class="md:hidden text-xs font-sans font-bold tracking-widest text-rose-300">06 DES 2024</span>
+                                <h4 class="font-serif text-2xl text-gray-700 md:hidden mt-1">Pertama Bertemu</h4>
+                                <p class="font-hand text-gray-500 md:hidden mb-2">di sudut kafe, hujan di luar, hangat di dalam.</p>
+                                <div class="mt-3 flex gap-2 items-center">
+                                    <img src="https://placehold.co/60x60/fce7f3/f472b6?text=✨" class="timeline-photo w-16 h-16" alt="foto kenangan" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22><rect width=%2260%22 height=%2260%22 fill=%22%23fce7f3%22/><text x=%2215%22 y=%2235%22 font-family=%22Arial%22 font-size=%2218%22 fill=%22%23f472b6%22>📸</text></svg>'">
+                                    <div class="flex flex-col">
+                                        <span class="px-3 py-1 bg-rose-50 text-rose-800 rounded-full text-[10px] font-sans font-bold tracking-wider inline-block mb-1">♉ TAURUS</span>
+                                        <span class="px-3 py-1 bg-blue-50 text-blue-800 rounded-full text-[10px] font-sans font-bold tracking-wider">♋ CANCER</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Item 2 -->
+                    <div class="relative flex flex-col md:flex-row items-start gap-6 md:gap-12 group">
+                        <div class="relative pl-12 md:pl-0 md:w-1/2 md:order-1">
+                            <div class="timeline-dot group-hover:scale-150 group-hover:bg-rose-400 transition-all"></div>
+                            <div class="bg-white p-6 rounded-2xl shadow-lg border border-rose-50 hover:shadow-xl transition">
+                                <span class="md:hidden text-xs font-sans font-bold tracking-widest text-rose-300">14 FEB 2025</span>
+                                <h4 class="font-serif text-2xl text-gray-700 md:hidden mt-1">Valentine Bersama</h4>
+                                <p class="font-hand text-gray-500 md:hidden mb-2">chocolate buatan sendiri & surat cinta.</p>
+                                <div class="mt-3 flex gap-2 items-center">
+                                    <img src="https://placehold.co/60x60/fbcfe8/f9a8d4?text=❤️" class="timeline-photo w-16 h-16" alt="foto kenangan" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22><rect width=%2260%22 height=%2260%22 fill=%22%23fbcfe8%22/><text x=%2215%22 y=%2235%22 font-family=%22Arial%22 font-size=%2218%22 fill=%22%23f9a8d4%22>❤️</text></svg>'">
+                                    <div class="flex gap-2">
+                                        <i class="fas fa-heart text-rose-300 text-sm"></i>
+                                        <i class="fas fa-heart text-rose-300 text-sm"></i>
+                                        <i class="fas fa-heart text-rose-300 text-sm"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hidden md:block w-1/2 text-left pl-8 md:order-2">
+                            <span class="text-xs font-sans font-bold tracking-widest text-rose-300">14 FEB 2025</span>
+                            <h4 class="font-serif text-2xl text-gray-700 mt-2">Valentine Bersama</h4>
+                            <p class="font-hand text-gray-500 mt-2">chocolate buatan sendiri & surat cinta.</p>
+                            <div class="mt-4">
+                                <img src="https://placehold.co/80x80/fbcfe8/f9a8d4?text=❤️" class="timeline-photo" alt="foto kenangan" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22><rect width=%2280%22 height=%2280%22 fill=%22%23fbcfe8%22/><text x=%2220%22 y=%2245%22 font-family=%22Arial%22 font-size=%2220%22 fill=%22%23f9a8d4%22>❤️</text></svg>'">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Item 3 -->
+                    <div class="relative flex flex-col md:flex-row items-start gap-6 md:gap-12 group">
+                        <div class="hidden md:block w-1/2 text-right pr-8">
+                            <span class="text-xs font-sans font-bold tracking-widest text-rose-300">20 JUL 2025</span>
+                            <h4 class="font-serif text-2xl text-gray-700 mt-2">Liburan Pertama</h4>
+                            <p class="font-hand text-gray-500 mt-2">ke pantai, melihat matahari terbenam bersama.</p>
+                            <div class="mt-4 flex justify-end">
+                                <img src="https://placehold.co/80x80/dbeafe/60a5fa?text=🌊" class="timeline-photo" alt="foto kenangan" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22><rect width=%2280%22 height=%2280%22 fill=%22%23dbeafe%22/><text x=%2220%22 y=%2245%22 font-family=%22Arial%22 font-size=%2220%22 fill=%22%2360a5fa%22>🌊</text></svg>'">
+                            </div>
+                        </div>
+                        <div class="relative pl-12 md:pl-0 md:w-1/2">
+                            <div class="timeline-dot group-hover:scale-150 group-hover:bg-rose-400 transition-all"></div>
+                            <div class="bg-white p-6 rounded-2xl shadow-lg border border-rose-50 hover:shadow-xl transition">
+                                <span class="md:hidden text-xs font-sans font-bold tracking-widest text-rose-300">20 JUL 2025</span>
+                                <h4 class="font-serif text-2xl text-gray-700 md:hidden mt-1">Liburan Pertama</h4>
+                                <p class="font-hand text-gray-500 md:hidden mb-2">ke pantai, melihat matahari terbenam bersama.</p>
+                                <div class="mt-3 flex gap-2 items-center">
+                                    <img src="https://placehold.co/60x60/dbeafe/60a5fa?text=🌊" class="timeline-photo w-16 h-16" alt="foto kenangan" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22><rect width=%2260%22 height=%2260%22 fill=%22%23dbeafe%22/><text x=%2215%22 y=%2235%22 font-family=%22Arial%22 font-size=%2218%22 fill=%22%2360a5fa%22>🌊</text></svg>'">
+                                    <div class="mt-2 text-amber-400">🌅</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PHOTOBOOTH SECTION WITH ENHANCED DESIGN & FRAME DOWNLOAD -->
+            <div class="max-w-5xl mx-auto mb-32">
+                <div class="text-center mb-16">
+                    <h3 class="font-script text-5xl text-rose-400 mb-2">Photobooth</h3>
+                    <div class="h-1 w-20 bg-rose-200 mx-auto rounded-full"></div>
+                    <p class="font-hand text-gray-500 mt-4 text-xl">potongan kebahagiaan kita</p>
+                    <button onclick="downloadAllPhotosAsFrame()" class="mt-6 bg-rose-500 text-white px-8 py-3 rounded-full text-sm font-sans font-bold hover:bg-rose-600 transition shadow-lg hover:shadow-rose-200/50 transform hover:-translate-y-1">
+                        <i class="fas fa-download mr-2"></i>Download Semua dalam 1 Frame
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 auto-rows-min" id="photobooth-grid">
+                    
+                    <div class="polaroid" style="--rot: -2deg" data-photo-idx="1">
+                        <div class="aspect-square bg-gradient-to-br from-rose-100 to-pink-100 rounded-sm flex items-center justify-center text-6xl text-rose-300">
+                            <i class="fas fa-camera-retro"></i>
+                        </div>
+                        <div class="photo-badge">🌸 2024</div>
+                    </div>
+                    
+                    <div class="polaroid" style="--rot: 3deg" data-photo-idx="2">
+                        <div class="aspect-square bg-gradient-to-br from-blue-100 to-cyan-100 rounded-sm flex items-center justify-center text-6xl text-blue-300">
+                            <i class="fas fa-umbrella-beach"></i>
+                        </div>
+                        <div class="photo-badge">🏖️ liburan</div>
+                    </div>
+
+                    <div class="polaroid" style="--rot: 1deg" data-photo-idx="3">
+                        <div class="aspect-square bg-gradient-to-br from-amber-100 to-yellow-100 rounded-sm flex items-center justify-center text-6xl text-amber-300">
+                            <i class="fas fa-mug-hot"></i>
+                        </div>
+                        <div class="photo-badge">☕ date kafe</div>
+                    </div>
+
+                    <div class="polaroid" style="--rot: -3deg" data-photo-idx="4">
+                        <div class="aspect-square bg-gradient-to-br from-emerald-100 to-teal-100 rounded-sm flex items-center justify-center text-6xl text-emerald-300">
+                            <i class="fas fa-tree"></i>
+                        </div>
+                        <div class="photo-badge">🌲 hiking</div>
+                    </div>
+
+                    <div class="polaroid col-span-2 md:col-span-1" style="--rot: 2deg" data-photo-idx="5">
+                        <div class="aspect-square bg-gradient-to-br from-pink-100 to-rose-100 rounded-sm flex items-center justify-center text-6xl text-pink-300">
+                            <i class="fas fa-cake-candles"></i>
+                        </div>
+                        <div class="photo-badge">🎂 ultah</div>
+                    </div>
+
+                    <div class="polaroid" style="--rot: -1deg" data-photo-idx="6">
+                        <div class="aspect-square bg-gradient-to-br from-indigo-100 to-purple-100 rounded-sm flex items-center justify-center text-6xl text-indigo-300">
+                            <i class="fas fa-music"></i>
+                        </div>
+                        <div class="photo-badge">🎶 konser</div>
+                    </div>
+                    
+                    <div class="polaroid relative col-span-2 md:col-span-1 flex items-center justify-center bg-white/70 backdrop-blur-sm border-2 border-dashed border-rose-300 hover:border-rose-400" style="transform: rotate(0deg);">
+                        <div class="text-center">
+                            <i class="fas fa-plus-circle text-4xl text-rose-300 mb-2"></i>
+                            <p class="font-hand text-gray-400">tambah kenangan</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BUCKET LIST SECTION -->
+            <div class="max-w-2xl mx-auto mb-32">
+                <div class="text-center mb-12">
+                    <h3 class="font-script text-5xl text-rose-400 mb-2">Our Bucket List</h3>
+                    <div class="h-1 w-16 bg-rose-200 mx-auto rounded-full"></div>
+                </div>
+                
+                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.05)] relative overflow-hidden border border-rose-50">
+                    <ul class="space-y-6 font-hand text-2xl text-gray-600">
+                        <li onclick="toggleCheck(this)" class="flex items-start gap-4 cursor-pointer hover:text-rose-500 transition group select-none">
+                            <div class="mt-1 text-rose-200 group-hover:text-rose-500 transition"><i class="far fa-square"></i></div>
+                            <span class="group-hover:translate-x-1 transition duration-300">Nonton konser bareng</span>
+                        </li>
+                        <li onclick="toggleCheck(this)" class="flex items-start gap-4 cursor-pointer hover:text-rose-500 transition group select-none">
+                            <div class="mt-1 text-rose-200 group-hover:text-rose-500 transition"><i class="far fa-square"></i></div>
+                            <span class="group-hover:translate-x-1 transition duration-300">Dinner romantis buatan sendiri</span>
+                        </li>
+                        <li onclick="toggleCheck(this)" class="flex items-start gap-4 cursor-pointer hover:text-rose-500 transition group select-none">
+                            <div class="mt-1 text-rose-200 group-hover:text-rose-500 transition"><i class="far fa-square"></i></div>
+                            <span class="group-hover:translate-x-1 transition duration-300">Traveling keliling Jepang</span>
+                        </li>
+                        <li onclick="toggleCheck(this)" class="flex items-start gap-4 cursor-pointer hover:text-rose-500 transition group select-none">
+                            <div class="mt-1 text-rose-200 group-hover:text-rose-500 transition"><i class="far fa-square"></i></div>
+                            <span class="group-hover:translate-x-1 transition duration-300">Punya rumah kecil & nyaman</span>
+                        </li>
+                         <li onclick="toggleCheck(this)" class="flex items-start gap-4 cursor-pointer hover:text-rose-500 transition group select-none">
+                            <div class="mt-1 text-rose-200 group-hover:text-rose-500 transition"><i class="far fa-square"></i></div>
+                            <span class="group-hover:translate-x-1 transition duration-300">Menua bersama selamanya</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="text-center mt-24 text-gray-300 font-sans text-[10px] uppercase tracking-[0.3em]">
+                Made with <i class="fas fa-heart text-rose-300 mx-1"></i> for You
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Hidden container for frame download -->
+    <div id="download-frame-container"></div>
+
+    <button onclick="openLetter()" id="mail-btn" class="fixed bottom-8 right-8 z-40 bg-rose-600 text-white w-14 h-14 rounded-full shadow-lg shadow-rose-500/30 flex items-center justify-center hover:bg-rose-700 hover:scale-110 transition duration-300 animate-float">
+        <i class="fas fa-envelope text-xl"></i>
+    </button>
+
+    <div id="letter-modal" class="modal-bg">
+        <div class="modal-content bg-[#fffdf5] w-11/12 md:w-2/3 max-w-lg p-8 md:p-12 rounded-sm shadow-2xl relative">
+            <div class="absolute top-0 left-0 w-full h-full border-[12px] border-white/50 pointer-events-none"></div>
+            
+            <button onclick="closeLetter()" class="absolute top-4 right-4 text-gray-300 hover:text-rose-500 transition text-2xl z-10">&times;</button>
+            
+            <div class="text-center mb-8">
+                <i class="fas fa-quote-left text-3xl text-rose-200 mb-4 block"></i>
+                <h3 class="font-script text-4xl text-gray-800">My Dearest Cancer</h3>
+            </div>
+            
+            <div class="prose font-hand text-xl text-gray-600 leading-relaxed max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar text-justify">
+                <p class="mb-4 first-letter:text-4xl first-letter:text-rose-500 first-letter:font-script first-letter:mr-1">
+                    Hai kamu,
+                </p>
+                <p class="mb-4">
+                    Website ini mungkin sederhana, tapi setiap baris kodenya aku tulis sambil mikirin kamu. Aku cuma mau bilang terima kasih. Terima kasih sudah jadi rumah paling nyaman buat Taurus yang kadang keras kepala ini.
+                </p>
+                <p class="mb-4">
+                    Dunia mungkin berisik, tapi sama kamu, semuanya jadi tenang. Aku nggak tau masa depan kayak gimana, tapi asal ada kamu di bucket list aku, aku siap hadapi apa aja.
+                </p>
+                <p class="mb-6">
+                    I love you, more than words (and code) can say.
+                </p>
+                <div class="mt-8 pt-6 border-t border-gray-100 text-right">
+                    <p class="font-fancy text-3xl text-rose-600">- Aku</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audio-player"></audio>
+
+    <script>
+        // --- CONFIGURATION ---
+        const START_DATE = new Date("2025-12-06"); 
+        document.getElementById('start-date-text').innerText = START_DATE.toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
+
+        const SONGS = [
+            { title: "Sedia Aku Sebelum Hujan", src: "./music/song1.mp3" }, 
+            { title: "bergema sampai selamanya", src: "./music/song2.mp3" },
+            { title: "Perfect", src: "./music/song3.mp3" },
+            { title: "Jantungati", src: "./music/song4.mp3" },
+        ];
+
+        // --- VARIABLES ---
+        const audio = document.getElementById('audio-player');
+        const playBtn = document.getElementById('play-btn');
+        const miniTitle = document.getElementById('mini-title');
+        const contentWrapper = document.getElementById('content-wrapper');
+        const bgOverlay = document.getElementById('main-overlay');
+        const exitTheaterBtn = document.getElementById('exit-theater-btn');
+        const mailBtn = document.getElementById('mail-btn');
+        const musicContainer = document.getElementById('music-container');
+        const modal = document.getElementById('letter-modal');
+        const downloadContainer = document.getElementById('download-frame-container');
+
+        let isPlaying = false;
+        let currentSongIdx = 0;
+        let isTheaterMode = false;
+
+        // --- THEATER MODE ---
+        function toggleTheaterMode() {
+            isTheaterMode = !isTheaterMode;
+            
+            if (isTheaterMode) {
+                contentWrapper.classList.add('theater-hidden');
+                mailBtn.classList.add('theater-hidden');
+                musicContainer.classList.add('theater-hidden');
+                bgOverlay.style.opacity = '0.1'; 
+                exitTheaterBtn.classList.remove('hidden');
+                
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch((e) => console.log(e));
+                }
+            } else {
+                contentWrapper.classList.remove('theater-hidden');
+                mailBtn.classList.remove('theater-hidden');
+                musicContainer.classList.remove('theater-hidden');
+                bgOverlay.style.opacity = '1';
+                exitTheaterBtn.classList.add('hidden');
+
+                if (document.fullscreenElement) {
+                    document.exitFullscreen().catch((e) => console.log(e));
+                }
+            }
+        }
+
+        // --- MUSIC PLAYER ---
+        function initPlaylist() {
+            const list = document.getElementById('playlist-ul');
+            list.innerHTML = "";
+            SONGS.forEach((s, i) => {
+                const li = document.createElement('li');
+                li.className = "flex justify-between items-center cursor-pointer hover:bg-rose-50 p-2 rounded-lg transition group";
+                li.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="text-rose-300 group-hover:text-rose-500 text-xs font-bold">0${i+1}</span>
+                        <span class="group-hover:text-rose-600 font-medium truncate w-32">${s.title}</span>
+                    </div>
+                    <i class="fas fa-play text-[8px] text-gray-300 group-hover:text-rose-500"></i>`;
+                li.onclick = () => playSong(i);
+                list.appendChild(li);
+            });
+            if(SONGS.length > 0) {
+                miniTitle.innerText = SONGS[0].title;
+                audio.src = SONGS[0].src;
+            }
+        }
+
+        function togglePlaylist() {
+            const box = document.getElementById('playlist-box');
+            box.classList.toggle('hidden');
+        }
+
+        function playSong(idx) {
+            currentSongIdx = idx;
+            audio.src = SONGS[idx].src;
+            audio.play().then(() => {
+                isPlaying = true;
+                updateUI();
+            }).catch(() => alert("Klik layar sekali dulu ya!"));
+            miniTitle.innerText = SONGS[idx].title;
+            document.getElementById('playlist-box').classList.add('hidden');
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
+            } else {
+                audio.play();
+                isPlaying = true;
+            }
+            updateUI();
+        }
+
+        function updateUI() {
+            if (isPlaying) {
+                playBtn.innerHTML = '<i class="fas fa-pause text-xs"></i>';
+                playBtn.classList.add('animate-pulse');
+            } else {
+                playBtn.innerHTML = '<i class="fas fa-play ml-1 text-xs"></i>';
+                playBtn.classList.remove('animate-pulse');
+            }
+        }
+
+        audio.addEventListener('ended', () => {
+            currentSongIdx = (currentSongIdx + 1) % SONGS.length;
+            playSong(currentSongIdx);
+        });
+
+        initPlaylist();
+
+        // --- MODAL & ZODIAC ---
+        function openLetter() { modal.classList.add('active'); }
+        function closeLetter() { modal.classList.remove('active'); }
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeLetter(); });
+
+        function revealZodiac() {
+            const btn = document.getElementById('zodiac-btn');
+            const result = document.getElementById('zodiac-result');
+            const pctText = document.getElementById('percentage');
+            
+            btn.style.display = 'none';
+            result.classList.remove('hidden');
+            result.classList.add('animate-fade-in');
+
+            const duration = 3000;
+            const end = Date.now() + duration;
+            (function frame() {
+                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#fda4af', '#fcd34d'] });
+                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#fda4af', '#fcd34d'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+
+            let start = 0;
+            const endVal = 100;
+            const animDuration = 2000;
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / animDuration, 1);
+                const ease = 1 - Math.pow(1 - progress, 3);
+                pctText.innerText = Math.floor(ease * endVal) + "%";
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
+
+        function toggleCheck(el) {
+            const iconDiv = el.querySelector('div');
+            const icon = iconDiv.querySelector('i');
+            const text = el.querySelector('span');
+            
+            if (text.classList.contains('line-through')) {
+                text.classList.remove('line-through', 'text-gray-300');
+                icon.className = 'far fa-square';
+                iconDiv.className = 'mt-1 text-rose-200 group-hover:text-rose-500 transition';
+            } else {
+                text.classList.add('line-through', 'text-gray-300');
+                icon.className = 'fas fa-check-square';
+                iconDiv.className = 'mt-1 text-rose-500 transition';
+                confetti({ particleCount: 20, spread: 40, origin: { y: 0.7 }, colors: ['#fda4af'] });
+            }
+        }
+
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - START_DATE;
+            document.getElementById('t-years').innerText = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
+            document.getElementById('t-days').innerText = Math.floor((diff % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24));
+            document.getElementById('t-hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById('t-minutes').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        // --- BACKGROUND SLIDESHOW ---
+        const slides = document.querySelectorAll('.bg-slide');
+        let slideIdx = 0;
+        setInterval(() => {
+            slides[slideIdx].classList.remove('active');
+            slideIdx = (slideIdx + 1) % slides.length;
+            slides[slideIdx].classList.add('active');
+        }, 8000); // 8 detik per slide
+
+        // --- NEW: DOWNLOAD ALL PHOTOS AS ONE FRAME ---
+        function downloadAllPhotosAsFrame() {
+            // Buat container frame sementara
+            const frame = document.createElement('div');
+            frame.style.position = 'relative';
+            frame.style.width = '1200px';
+            frame.style.height = '800px';
+            frame.style.background = 'linear-gradient(135deg, #fffdf5, #fff)';
+            frame.style.padding = '40px';
+            frame.style.display = 'grid';
+            frame.style.gridTemplateColumns = 'repeat(4, 1fr)';
+            frame.style.gap = '30px';
+            frame.style.alignItems = 'start';
+            frame.style.justifyItems = 'center';
+            frame.style.fontFamily = "'Patrick Hand', cursive";
+            
+            // Judul frame
+            const title = document.createElement('div');
+            title.style.position = 'absolute';
+            title.style.top = '20px';
+            title.style.left = '50%';
+            title.style.transform = 'translateX(-50%)';
+            title.style.fontSize = '48px';
+            title.style.fontFamily = "'Sacramento', cursive";
+            title.style.color = '#be123c';
+            title.style.textShadow = '2px 2px 4px rgba(0,0,0,0.1)';
+            title.innerText = 'Our Photobooth Memories';
+            frame.appendChild(title);
+            
+            // Ambil semua foto dari grid
+            const photos = document.querySelectorAll('.polaroid[data-photo-idx]');
+            
+            photos.forEach((photo, index) => {
+                const iconElement = photo.querySelector('.aspect-square i');
+                const iconClass = iconElement ? iconElement.className : '';
+                const caption = photo.querySelector('.photo-badge')?.innerText || 'kenangan';
+                const bgGradient = photo.querySelector('.aspect-square')?.className || '';
+                
+                // Buat elemen polaroid untuk frame
+                const polaroid = document.createElement('div');
+                polaroid.style.background = 'white';
+                polaroid.style.padding = '15px 15px 30px 15px';
+                polaroid.style.boxShadow = '0 15px 25px -8px rgba(190, 18, 60, 0.3)';
+                polaroid.style.transform = `rotate(${Math.random() * 6 - 3}deg)`;
+                polaroid.style.borderRadius = '4px';
+                polaroid.style.width = '100%';
+                polaroid.style.border = '1px solid rgba(255,255,255,0.5)';
+                
+                // Area foto
+                const photoArea = document.createElement('div');
+                photoArea.style.aspectRatio = '1';
+                photoArea.style.background = `linear-gradient(135deg, ${getGradientColor(index)}, ${getGradientColor(index, true)})`;
+                photoArea.style.borderRadius = '4px';
+                photoArea.style.display = 'flex';
+                photoArea.style.alignItems = 'center';
+                photoArea.style.justifyContent = 'center';
+                photoArea.style.fontSize = '60px';
+                photoArea.style.color = getIconColor(index);
+                
+                // Dapatkan ikon
+                let iconChar = '📸';
+                if (iconClass.includes('camera-retro')) iconChar = '📷';
+                else if (iconClass.includes('umbrella-beach')) iconChar = '🏖️';
+                else if (iconClass.includes('mug-hot')) iconChar = '☕';
+                else if (iconClass.includes('tree')) iconChar = '🌲';
+                else if (iconClass.includes('cake-candles')) iconChar = '🎂';
+                else if (iconClass.includes('music')) iconChar = '🎵';
+                
+                photoArea.innerText = iconChar;
+                
+                // Caption
+                const captionDiv = document.createElement('div');
+                captionDiv.style.textAlign = 'center';
+                captionDiv.style.marginTop = '10px';
+                captionDiv.style.fontSize = '16px';
+                captionDiv.style.color = '#6b7280';
+                captionDiv.style.fontFamily = "'Patrick Hand', cursive";
+                captionDiv.innerText = caption;
+                
+                polaroid.appendChild(photoArea);
+                polaroid.appendChild(captionDiv);
+                frame.appendChild(polaroid);
+            });
+            
+            // Tambahkan ke container hidden
+            downloadContainer.innerHTML = '';
+            downloadContainer.appendChild(frame);
+            
+            // Gunakan html2canvas untuk capture
+            import('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js').then(() => {
+                html2canvas(frame, {
+                    scale: 2,
+                    backgroundColor: '#fffdf5',
+                    logging: false,
+                    allowTaint: false,
+                    useCORS: true
+                }).then(canvas => {
+                    // Download
+                    const link = document.createElement('a');
+                    link.download = `photobooth-frame-${Date.now()}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    
+                    // Bersihkan
+                    downloadContainer.innerHTML = '';
+                    
+                    // Confetti
+                    confetti({ particleCount: 50, spread: 70, origin: { y: 0.6 }, colors: ['#fda4af', '#f472b6'] });
+                });
+            }).catch(err => {
+                console.error('html2canvas error:', err);
+                alert('Gagal mendownload. Coba lagi nanti.');
+            });
+        }
+
+        // Helper functions untuk gradient
+        function getGradientColor(index, isLight = false) {
+            const colors = [
+                ['#fce7f3', '#fbcfe8'],
+                ['#dbeafe', '#bfdbfe'],
+                ['#fef3c7', '#fde68a'],
+                ['#d1fae5', '#a7f3d0'],
+                ['#fce7f3', '#fbcfe8'],
+                ['#ede9fe', '#ddd6fe']
+            ];
+            return colors[index % colors.length][isLight ? 1 : 0];
+        }
+
+        function getIconColor(index) {
+            const colors = ['#f472b6', '#60a5fa', '#f59e0b', '#10b981', '#ec4899', '#8b5cf6'];
+            return colors[index % colors.length];
+        }
+
+        // Autoplay fallback
+        window.addEventListener('click', () => {
+            if (!isPlaying && audio.paused) { 
+                audio.play().then(() => { isPlaying=true; updateUI(); }).catch(e=>{});
+            }
+        }, { once: true });
+
+    </script>
+</body>
+</html>
