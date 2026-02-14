@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taurus & Cancer: Our Journey</title>
+    <title>Anapedia</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -96,12 +96,26 @@
             transform: scale(1) translateY(0);
         }
 
-        /* --- THEATER MODE UTILS --- */
+        /* --- THEATER MODE UTILS - DIPERBAIKI AGAR PLAYLIST TETAP TERLIHAT --- */
         .theater-hidden {
             opacity: 0 !important;
             pointer-events: none !important;
             transform: scale(0.95);
             transition: all 1s ease;
+        }
+        
+        /* Kecualikan elemen musik container dari theater-hidden */
+        #music-container.theater-hidden {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            transform: none !important;
+        }
+        
+        /* Kecualikan playlist box */
+        #playlist-box.theater-hidden {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            transform: none !important;
         }
 
         /* Scrollbar & Glass */
@@ -200,10 +214,12 @@
             border: 2px solid white;
         }
 
-        /* Timeline photo container */
+        /* Timeline photo container - diperbesar */
         .timeline-photo {
-            width: 80px;
-            height: 80px;
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            aspect-ratio: 4/3;
             border-radius: 16px;
             object-fit: cover;
             border: 3px solid white;
@@ -211,7 +227,7 @@
             transition: transform 0.3s ease;
         }
         .timeline-photo:hover {
-            transform: scale(1.15) rotate(2deg);
+            transform: scale(1.05) rotate(1deg);
         }
         
         /* Custom scrollbar */
@@ -239,6 +255,13 @@
             opacity: 0;
             pointer-events: none;
         }
+
+        /* Timeline responsive improvements */
+        .timeline-card {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body class="text-gray-800 antialiased overflow-x-hidden selection:bg-rose-200 selection:text-rose-900 font-sans">
@@ -252,6 +275,7 @@
         <div class="bg-slide" style="background-image: url('./img/6.JPG');"></div>
         <div class="bg-slide" style="background-image: url('./img/7.JPG');"></div>
         <div class="bg-slide" style="background-image: url('./img/8.JPG');"></div>
+        <div class="bg-slide" style="background-image: url('./img/9.jpg');"></div>
     </div>
     
     <div class="bg-overlay" id="main-overlay"></div>
@@ -287,7 +311,7 @@
                     <h2 class="font-serif text-rose-950 text-xs md:text-sm tracking-[0.3em] uppercase font-bold">The Love Story of</h2>
                 </div>
                 <h1 class="font-fancy text-7xl md:text-9xl text-rose-600 drop-shadow-lg mb-6 leading-tight text-shadow">
-                    Taurus <span class="text-white font-script text-5xl md:text-7xl mx-2 text-shadow">&</span> Cancer
+                    Mahendra <span class="text-white font-script text-5xl md:text-7xl mx-2 text-shadow">&</span> Angelica
                 </h1>
             </div>
             
@@ -367,7 +391,7 @@
                 </div>
             </div>
 
-            <!-- NEW: FLIP CARD KEJUTAN -->
+            <!-- FLIP CARD KEJUTAN -->
             <div class="max-w-md mx-auto mb-32">
                 <div class="text-center mb-8">
                     <h3 class="font-script text-5xl text-rose-400 mb-2">Kejutan Spesial</h3>
@@ -378,7 +402,6 @@
                 <div class="flip-card" onclick="this.classList.toggle('flipped')">
                     <div class="flip-card-inner">
                         <div class="flip-card-front">
-                            <i class="fas fa-question text-6xl text-rose-300 mb-4"></i>
                             <h4 class="font-script text-4xl text-rose-600">?</h4>
                             <p class="font-hand text-gray-500 mt-4">ada sesuatu di balik ini...</p>
                         </div>
@@ -386,13 +409,12 @@
                             <i class="fas fa-heart text-5xl text-rose-500 mb-4 animate-pulse"></i>
                             <h4 class="font-script text-4xl text-rose-700">I Love You</h4>
                             <p class="font-hand text-gray-700 mt-4 text-center">Terima kasih sudah menjadi alasan aku tersenyum setiap hari. Kamu adalah kejutan terindah dalam hidupku. 💕</p>
-                            <div class="mt-4 text-rose-400 text-sm">♉ + ♋ = ∞</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- TIMELINE SECTION WITH PHOTO CONTAINERS -->
+            <!-- TIMELINE SECTION WITH PHOTO CONTAINERS - DIPERBAIKI -->
             <div class="max-w-4xl mx-auto mb-32">
                 <div class="text-center mb-16">
                     <h3 class="font-script text-5xl text-rose-400 mb-2">Our Timeline</h3>
@@ -400,30 +422,31 @@
                     <p class="font-hand text-gray-500 mt-4 text-xl">setiap momen adalah cerita</p>
                 </div>
 
-                <div class="space-y-12 relative before:absolute before:left-4 md:before:left-1/2 before:transform md:before:-translate-x-1/2 before:h-full before:w-[2px] before:bg-rose-200 before:rounded-full">
+                <div class="space-y-16 relative before:absolute before:left-1/2 before:transform before:-translate-x-1/2 before:h-full before:w-[2px] before:bg-rose-200 before:rounded-full before:hidden md:before:block">
                     
                     <!-- Timeline Item 1 -->
                     <div class="relative flex flex-col md:flex-row items-start gap-6 md:gap-12 group">
+                        <!-- Konten untuk desktop kiri -->
                         <div class="hidden md:block w-1/2 text-right pr-8">
-                            <span class="text-xs font-sans font-bold tracking-widest text-rose-300">06 DES 2024</span>
-                            <h4 class="font-serif text-2xl text-gray-700 mt-2">Pertama Bertemu</h4>
-                            <p class="font-hand text-gray-500 mt-2">di sudut kafe, hujan di luar, hangat di dalam.</p>
-                            <div class="mt-4 flex justify-end">
-                                <img src="https://placehold.co/80x80/fce7f3/f472b6?text=✨" class="timeline-photo" alt="foto kenangan" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22><rect width=%2280%22 height=%2280%22 fill=%22%23fce7f3%22/><text x=%2220%22 y=%2245%22 font-family=%22Arial%22 font-size=%2220%22 fill=%22%23f472b6%22>📸</text></svg>'">
-                            </div>
+                            <span class="text-xs font-sans font-bold tracking-widest text-rose-300">08 OKTOBER 2024</span>
+                            <h4 class="font-serif text-2xl text-gray-700 mt-2">Chat Pertama</h4>
+                            <p class="font-hand text-gray-500 mt-2">kamu humas upc dan aku supervisor dpm</p>
                         </div>
-                        <div class="relative pl-12 md:pl-0 md:w-1/2">
-                            <div class="timeline-dot group-hover:scale-150 group-hover:bg-rose-400 transition-all"></div>
-                            <div class="bg-white p-6 rounded-2xl shadow-lg border border-rose-50 hover:shadow-xl transition">
-                                <span class="md:hidden text-xs font-sans font-bold tracking-widest text-rose-300">06 DES 2024</span>
-                                <h4 class="font-serif text-2xl text-gray-700 md:hidden mt-1">Pertama Bertemu</h4>
-                                <p class="font-hand text-gray-500 md:hidden mb-2">di sudut kafe, hujan di luar, hangat di dalam.</p>
-                                <div class="mt-3 flex gap-2 items-center">
-                                    <img src="https://placehold.co/60x60/fce7f3/f472b6?text=✨" class="timeline-photo w-16 h-16" alt="foto kenangan" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22><rect width=%2260%22 height=%2260%22 fill=%22%23fce7f3%22/><text x=%2215%22 y=%2235%22 font-family=%22Arial%22 font-size=%2218%22 fill=%22%23f472b6%22>📸</text></svg>'">
-                                    <div class="flex flex-col">
-                                        <span class="px-3 py-1 bg-rose-50 text-rose-800 rounded-full text-[10px] font-sans font-bold tracking-wider inline-block mb-1">♉ TAURUS</span>
-                                        <span class="px-3 py-1 bg-blue-50 text-blue-800 rounded-full text-[10px] font-sans font-bold tracking-wider">♋ CANCER</span>
-                                    </div>
+                        
+                        <!-- Container untuk mobile dan desktop -->
+                        <div class="relative w-full md:w-1/2">
+                            <div class="timeline-dot hidden md:block group-hover:scale-150 group-hover:bg-rose-400 transition-all"></div>
+                            
+                            <!-- Card untuk mobile & desktop konsisten -->
+                            <div class="bg-white p-6 rounded-2xl shadow-lg border border-rose-50 hover:shadow-xl transition timeline-card">
+                                <!-- Tanggal dan judul untuk mobile -->
+                                <span class="md:hidden text-xs font-sans font-bold tracking-widest text-rose-300">08 OKTOBER 2024</span>
+                                <h4 class="font-serif text-2xl text-gray-700 md:hidden mt-1">Chat Pertama</h4>
+                                <p class="font-hand text-gray-500 md:hidden mb-4">kamu humas upc dan aku supervisor dpm</p>
+                                
+                                <!-- Foto -->
+                                <div class="mt-4 flex justify-center">
+                                    <img src="./img/ss1.jpg" class="timeline-photo" alt="foto kenangan" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22350%22 height=%22250%22 viewBox=%220 0 350 250%22><rect width=%22350%22 height=%22250%22 fill=%22%23fce7f3%22/><text x=%22120%22 y=%22130%22 font-family=%22Arial%22 font-size=%2230%22 fill=%22%23f472b6%22>📸</text></svg>'">
                                 </div>
                             </div>
                         </div>
@@ -431,52 +454,66 @@
 
                     <!-- Timeline Item 2 -->
                     <div class="relative flex flex-col md:flex-row items-start gap-6 md:gap-12 group">
-                        <div class="relative pl-12 md:pl-0 md:w-1/2 md:order-1">
-                            <div class="timeline-dot group-hover:scale-150 group-hover:bg-rose-400 transition-all"></div>
-                            <div class="bg-white p-6 rounded-2xl shadow-lg border border-rose-50 hover:shadow-xl transition">
-                                <span class="md:hidden text-xs font-sans font-bold tracking-widest text-rose-300">14 FEB 2025</span>
-                                <h4 class="font-serif text-2xl text-gray-700 md:hidden mt-1">Valentine Bersama</h4>
-                                <p class="font-hand text-gray-500 md:hidden mb-2">chocolate buatan sendiri & surat cinta.</p>
-                                <div class="mt-3 flex gap-2 items-center">
-                                    <img src="https://placehold.co/60x60/fbcfe8/f9a8d4?text=❤️" class="timeline-photo w-16 h-16" alt="foto kenangan" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22><rect width=%2260%22 height=%2260%22 fill=%22%23fbcfe8%22/><text x=%2215%22 y=%2235%22 font-family=%22Arial%22 font-size=%2218%22 fill=%22%23f9a8d4%22>❤️</text></svg>'">
-                                    <div class="flex gap-2">
-                                        <i class="fas fa-heart text-rose-300 text-sm"></i>
-                                        <i class="fas fa-heart text-rose-300 text-sm"></i>
-                                        <i class="fas fa-heart text-rose-300 text-sm"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- Konten untuk desktop kanan -->
                         <div class="hidden md:block w-1/2 text-left pl-8 md:order-2">
-                            <span class="text-xs font-sans font-bold tracking-widest text-rose-300">14 FEB 2025</span>
-                            <h4 class="font-serif text-2xl text-gray-700 mt-2">Valentine Bersama</h4>
-                            <p class="font-hand text-gray-500 mt-2">chocolate buatan sendiri & surat cinta.</p>
-                            <div class="mt-4">
-                                <img src="https://placehold.co/80x80/fbcfe8/f9a8d4?text=❤️" class="timeline-photo" alt="foto kenangan" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22><rect width=%2280%22 height=%2280%22 fill=%22%23fbcfe8%22/><text x=%2220%22 y=%2245%22 font-family=%22Arial%22 font-size=%2220%22 fill=%22%23f9a8d4%22>❤️</text></svg>'">
+                            <span class="text-xs font-sans font-bold tracking-widest text-rose-300">06 DESEMBER 2025</span>
+                            <h4 class="font-serif text-2xl text-gray-700 mt-2">Kepastian</h4>
+                            <p class="font-hand text-gray-500 mt-2">Hari di mana aku nembak kamu</p>
+                        </div>
+                        
+                        <!-- Container untuk mobile dan desktop -->
+                        <div class="relative w-full md:w-1/2 md:order-1">
+                            <div class="timeline-dot hidden md:block group-hover:scale-150 group-hover:bg-rose-400 transition-all"></div>
+                            
+                            <!-- Card untuk mobile & desktop konsisten -->
+                            <div class="bg-white p-6 rounded-2xl shadow-lg border border-rose-50 hover:shadow-xl transition timeline-card">
+                                <!-- Tanggal dan judul untuk mobile -->
+                                <span class="md:hidden text-xs font-sans font-bold tracking-widest text-rose-300">06 DESEMBER 2025</span>
+                                <h4 class="font-serif text-2xl text-gray-700 md:hidden mt-1">Kepastian</h4>
+                                <p class="font-hand text-gray-500 md:hidden mb-4">Hari di mana aku nembak kamu</p>
+                                
+                                <!-- Foto -->
+                                <div class="mt-4 flex justify-center">
+                                    <img src="./img/3.jpg" class="timeline-photo" alt="foto kenangan" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22350%22 height=%22250%22 viewBox=%220 0 350 250%22><rect width=%22350%22 height=%22250%22 fill=%22%23fbcfe8%22/><text x=%22140%22 y=%22130%22 font-family=%22Arial%22 font-size=%2230%22 fill=%22%23f9a8d4%22>❤️</text></svg>'">
+                                </div>
+                                
+                                <!-- Ikon tambahan -->
+                                <div class="mt-3 flex justify-center gap-2">
+                                    <i class="fas fa-heart text-rose-300 text-sm"></i>
+                                    <i class="fas fa-heart text-rose-300 text-sm"></i>
+                                    <i class="fas fa-heart text-rose-300 text-sm"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Timeline Item 3 -->
                     <div class="relative flex flex-col md:flex-row items-start gap-6 md:gap-12 group">
+                        <!-- Konten untuk desktop kiri -->
                         <div class="hidden md:block w-1/2 text-right pr-8">
-                            <span class="text-xs font-sans font-bold tracking-widest text-rose-300">20 JUL 2025</span>
-                            <h4 class="font-serif text-2xl text-gray-700 mt-2">Liburan Pertama</h4>
-                            <p class="font-hand text-gray-500 mt-2">ke pantai, melihat matahari terbenam bersama.</p>
-                            <div class="mt-4 flex justify-end">
-                                <img src="https://placehold.co/80x80/dbeafe/60a5fa?text=🌊" class="timeline-photo" alt="foto kenangan" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22><rect width=%2280%22 height=%2280%22 fill=%22%23dbeafe%22/><text x=%2220%22 y=%2245%22 font-family=%22Arial%22 font-size=%2220%22 fill=%22%2360a5fa%22>🌊</text></svg>'">
-                            </div>
+                            <span class="text-xs font-sans font-bold tracking-widest text-rose-300">24 DESEMBER 2025</span>
+                            <h4 class="font-serif text-2xl text-gray-700 mt-2">Date Pertama Kita</h4>
+                            <p class="font-hand text-gray-500 mt-2">"Kamu, tanggal 24 nanti kosong ga?"</p>
                         </div>
-                        <div class="relative pl-12 md:pl-0 md:w-1/2">
-                            <div class="timeline-dot group-hover:scale-150 group-hover:bg-rose-400 transition-all"></div>
-                            <div class="bg-white p-6 rounded-2xl shadow-lg border border-rose-50 hover:shadow-xl transition">
-                                <span class="md:hidden text-xs font-sans font-bold tracking-widest text-rose-300">20 JUL 2025</span>
-                                <h4 class="font-serif text-2xl text-gray-700 md:hidden mt-1">Liburan Pertama</h4>
-                                <p class="font-hand text-gray-500 md:hidden mb-2">ke pantai, melihat matahari terbenam bersama.</p>
-                                <div class="mt-3 flex gap-2 items-center">
-                                    <img src="https://placehold.co/60x60/dbeafe/60a5fa?text=🌊" class="timeline-photo w-16 h-16" alt="foto kenangan" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22><rect width=%2260%22 height=%2260%22 fill=%22%23dbeafe%22/><text x=%2215%22 y=%2235%22 font-family=%22Arial%22 font-size=%2218%22 fill=%22%2360a5fa%22>🌊</text></svg>'">
-                                    <div class="mt-2 text-amber-400">🌅</div>
+                        
+                        <!-- Container untuk mobile dan desktop -->
+                        <div class="relative w-full md:w-1/2">
+                            <div class="timeline-dot hidden md:block group-hover:scale-150 group-hover:bg-rose-400 transition-all"></div>
+                            
+                            <!-- Card untuk mobile & desktop konsisten -->
+                            <div class="bg-white p-6 rounded-2xl shadow-lg border border-rose-50 hover:shadow-xl transition timeline-card">
+                                <!-- Tanggal dan judul untuk mobile -->
+                                <span class="md:hidden text-xs font-sans font-bold tracking-widest text-rose-300">24 DESEMBER 2025</span>
+                                <h4 class="font-serif text-2xl text-gray-700 md:hidden mt-1">Date Pertama Kita</h4>
+                                <p class="font-hand text-gray-500 md:hidden mb-4">"Kamu, tanggal 24 nanti kosong ga?"</p>
+                                
+                                <!-- Foto -->
+                                <div class="mt-4 flex justify-center">
+                                    <img src="./img/1.jpg" class="timeline-photo" alt="foto kenangan" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22350%22 height=%22250%22 viewBox=%220 0 350 250%22><rect width=%22350%22 height=%22250%22 fill=%22%23dbeafe%22/><text x=%22140%22 y=%22130%22 font-family=%22Arial%22 font-size=%2230%22 fill=%22%2360a5fa%22>🌊</text></svg>'">
                                 </div>
+                                
+                                <!-- Emoji tambahan -->
+                                <div class="mt-3 text-center text-amber-400 text-2xl">🌅</div>
                             </div>
                         </div>
                     </div>
@@ -498,33 +535,33 @@
                     
                     <div class="polaroid" style="--rot: -2deg" data-photo-idx="1">
                         <div class="aspect-square bg-gradient-to-br from-rose-100 to-pink-100 rounded-sm flex items-center justify-center text-6xl text-rose-300">
-                            <i class="fas fa-camera-retro"></i>
+                            <img src="./img/3.jpg">
                         </div>
-                        <div class="photo-badge">🌸 2024</div>
+                        <div class="photo-badge">🌸 "Kamu mau jadi pacar aku?"</div>
                     </div>
                     
                     <div class="polaroid" style="--rot: 3deg" data-photo-idx="2">
                         <div class="aspect-square bg-gradient-to-br from-blue-100 to-cyan-100 rounded-sm flex items-center justify-center text-6xl text-blue-300">
-                            <i class="fas fa-umbrella-beach"></i>
+                            <img src="./img/2.jpg">
                         </div>
-                        <div class="photo-badge">🏖️ liburan</div>
+                        <div class="photo-badge">💐 Bunga Pertama</div>
                     </div>
 
                     <div class="polaroid" style="--rot: 1deg" data-photo-idx="3">
                         <div class="aspect-square bg-gradient-to-br from-amber-100 to-yellow-100 rounded-sm flex items-center justify-center text-6xl text-amber-300">
-                            <i class="fas fa-mug-hot"></i>
+                            <img src="./img/1.jpg">
                         </div>
-                        <div class="photo-badge">☕ date kafe</div>
+                        <div class="photo-badge">☕ Date Pertama</div>
                     </div>
 
                     <div class="polaroid" style="--rot: -3deg" data-photo-idx="4">
                         <div class="aspect-square bg-gradient-to-br from-emerald-100 to-teal-100 rounded-sm flex items-center justify-center text-6xl text-emerald-300">
-                            <i class="fas fa-tree"></i>
+                            <img src="./img/ss2.jpg">
                         </div>
-                        <div class="photo-badge">🌲 hiking</div>
+                        <div class="photo-badge">🌲 Support Kamu</div>
                     </div>
 
-                    <div class="polaroid col-span-2 md:col-span-1" style="--rot: 2deg" data-photo-idx="5">
+                    <!-- <div class="polaroid col-span-2 md:col-span-1" style="--rot: 2deg" data-photo-idx="5">
                         <div class="aspect-square bg-gradient-to-br from-pink-100 to-rose-100 rounded-sm flex items-center justify-center text-6xl text-pink-300">
                             <i class="fas fa-cake-candles"></i>
                         </div>
@@ -536,14 +573,7 @@
                             <i class="fas fa-music"></i>
                         </div>
                         <div class="photo-badge">🎶 konser</div>
-                    </div>
-                    
-                    <div class="polaroid relative col-span-2 md:col-span-1 flex items-center justify-center bg-white/70 backdrop-blur-sm border-2 border-dashed border-rose-300 hover:border-rose-400" style="transform: rotate(0deg);">
-                        <div class="text-center">
-                            <i class="fas fa-plus-circle text-4xl text-rose-300 mb-2"></i>
-                            <p class="font-hand text-gray-400">tambah kenangan</p>
-                        </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -558,19 +588,19 @@
                     <ul class="space-y-6 font-hand text-2xl text-gray-600">
                         <li onclick="toggleCheck(this)" class="flex items-start gap-4 cursor-pointer hover:text-rose-500 transition group select-none">
                             <div class="mt-1 text-rose-200 group-hover:text-rose-500 transition"><i class="far fa-square"></i></div>
-                            <span class="group-hover:translate-x-1 transition duration-300">Nonton konser bareng</span>
+                            <span class="group-hover:translate-x-1 transition duration-300">Pelihara Cupang</span>
                         </li>
                         <li onclick="toggleCheck(this)" class="flex items-start gap-4 cursor-pointer hover:text-rose-500 transition group select-none">
                             <div class="mt-1 text-rose-200 group-hover:text-rose-500 transition"><i class="far fa-square"></i></div>
-                            <span class="group-hover:translate-x-1 transition duration-300">Dinner romantis buatan sendiri</span>
+                            <span class="group-hover:translate-x-1 transition duration-300">Nonton film bareng</span>
                         </li>
                         <li onclick="toggleCheck(this)" class="flex items-start gap-4 cursor-pointer hover:text-rose-500 transition group select-none">
                             <div class="mt-1 text-rose-200 group-hover:text-rose-500 transition"><i class="far fa-square"></i></div>
-                            <span class="group-hover:translate-x-1 transition duration-300">Traveling keliling Jepang</span>
+                            <span class="group-hover:translate-x-1 transition duration-300">Traveling keliling Jepang, Korea, Swiss</span>
                         </li>
                         <li onclick="toggleCheck(this)" class="flex items-start gap-4 cursor-pointer hover:text-rose-500 transition group select-none">
                             <div class="mt-1 text-rose-200 group-hover:text-rose-500 transition"><i class="far fa-square"></i></div>
-                            <span class="group-hover:translate-x-1 transition duration-300">Punya rumah kecil & nyaman</span>
+                            <span class="group-hover:translate-x-1 transition duration-300">Punya rumah bali 1 lantai</span>
                         </li>
                          <li onclick="toggleCheck(this)" class="flex items-start gap-4 cursor-pointer hover:text-rose-500 transition group select-none">
                             <div class="mt-1 text-rose-200 group-hover:text-rose-500 transition"><i class="far fa-square"></i></div>
@@ -602,15 +632,15 @@
             
             <div class="text-center mb-8">
                 <i class="fas fa-quote-left text-3xl text-rose-200 mb-4 block"></i>
-                <h3 class="font-script text-4xl text-gray-800">My Dearest Cancer</h3>
+                <h3 class="font-script text-4xl text-gray-800">My Dearest Angelica</h3>
             </div>
             
             <div class="prose font-hand text-xl text-gray-600 leading-relaxed max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar text-justify">
                 <p class="mb-4 first-letter:text-4xl first-letter:text-rose-500 first-letter:font-script first-letter:mr-1">
-                    Hai kamu,
+                    Haii Cintaakuuu,
                 </p>
                 <p class="mb-4">
-                    Website ini mungkin sederhana, tapi setiap baris kodenya aku tulis sambil mikirin kamu. Aku cuma mau bilang terima kasih. Terima kasih sudah jadi rumah paling nyaman buat Taurus yang kadang keras kepala ini.
+                    Website ini mungkin sederhana, tapi setiap baris kodenya aku tulis sambil mikirin kamu. Aku cuma mau bilang terima kasih. Terima kasih udah jadi rumah paling nyaman buat aku yang kadang keras kepala dan ngeselin ini.
                 </p>
                 <p class="mb-4">
                     Dunia mungkin berisik, tapi sama kamu, semuanya jadi tenang. Aku nggak tau masa depan kayak gimana, tapi asal ada kamu di bucket list aku, aku siap hadapi apa aja.
@@ -619,7 +649,7 @@
                     I love you, more than words (and code) can say.
                 </p>
                 <div class="mt-8 pt-6 border-t border-gray-100 text-right">
-                    <p class="font-fancy text-3xl text-rose-600">- Aku</p>
+                    <p class="font-fancy text-3xl text-rose-600">- Mahendra</p>
                 </div>
             </div>
         </div>
@@ -629,7 +659,7 @@
 
     <script>
         // --- CONFIGURATION ---
-        const START_DATE = new Date("2025-12-06"); 
+        const START_DATE = new Date("2025-12-06"); // Diubah sesuai chat pertama
         document.getElementById('start-date-text').innerText = START_DATE.toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
 
         const SONGS = [
@@ -662,7 +692,6 @@
             if (isTheaterMode) {
                 contentWrapper.classList.add('theater-hidden');
                 mailBtn.classList.add('theater-hidden');
-                musicContainer.classList.add('theater-hidden');
                 bgOverlay.style.opacity = '0.1'; 
                 exitTheaterBtn.classList.remove('hidden');
                 
@@ -672,7 +701,6 @@
             } else {
                 contentWrapper.classList.remove('theater-hidden');
                 mailBtn.classList.remove('theater-hidden');
-                musicContainer.classList.remove('theater-hidden');
                 bgOverlay.style.opacity = '1';
                 exitTheaterBtn.classList.add('hidden');
 
@@ -701,6 +729,17 @@
             if(SONGS.length > 0) {
                 miniTitle.innerText = SONGS[0].title;
                 audio.src = SONGS[0].src;
+                
+                // Auto play
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        isPlaying = true;
+                        updateUI();
+                    }).catch(error => {
+                        console.log("Autoplay dicegah browser, butuh interaksi pengguna:", error);
+                    });
+                }
             }
         }
 
@@ -715,7 +754,9 @@
             audio.play().then(() => {
                 isPlaying = true;
                 updateUI();
-            }).catch(() => alert("Klik layar sekali dulu ya!"));
+            }).catch((e) => {
+                console.log("Play error:", e);
+            });
             miniTitle.innerText = SONGS[idx].title;
             document.getElementById('playlist-box').classList.add('hidden');
         }
@@ -770,7 +811,6 @@
                 if (Date.now() < end) requestAnimationFrame(frame);
             }());
 
-            let start = 0;
             const endVal = 100;
             const animDuration = 2000;
             const startTime = performance.now();
@@ -820,11 +860,10 @@
             slides[slideIdx].classList.remove('active');
             slideIdx = (slideIdx + 1) % slides.length;
             slides[slideIdx].classList.add('active');
-        }, 8000); // 8 detik per slide
+        }, 8000);
 
-        // --- NEW: DOWNLOAD ALL PHOTOS AS ONE FRAME ---
+        // --- DOWNLOAD ALL PHOTOS AS ONE FRAME ---
         function downloadAllPhotosAsFrame() {
-            // Buat container frame sementara
             const frame = document.createElement('div');
             frame.style.position = 'relative';
             frame.style.width = '1200px';
@@ -838,7 +877,6 @@
             frame.style.justifyItems = 'center';
             frame.style.fontFamily = "'Patrick Hand', cursive";
             
-            // Judul frame
             const title = document.createElement('div');
             title.style.position = 'absolute';
             title.style.top = '20px';
@@ -851,16 +889,13 @@
             title.innerText = 'Our Photobooth Memories';
             frame.appendChild(title);
             
-            // Ambil semua foto dari grid
             const photos = document.querySelectorAll('.polaroid[data-photo-idx]');
             
             photos.forEach((photo, index) => {
                 const iconElement = photo.querySelector('.aspect-square i');
                 const iconClass = iconElement ? iconElement.className : '';
                 const caption = photo.querySelector('.photo-badge')?.innerText || 'kenangan';
-                const bgGradient = photo.querySelector('.aspect-square')?.className || '';
                 
-                // Buat elemen polaroid untuk frame
                 const polaroid = document.createElement('div');
                 polaroid.style.background = 'white';
                 polaroid.style.padding = '15px 15px 30px 15px';
@@ -870,7 +905,6 @@
                 polaroid.style.width = '100%';
                 polaroid.style.border = '1px solid rgba(255,255,255,0.5)';
                 
-                // Area foto
                 const photoArea = document.createElement('div');
                 photoArea.style.aspectRatio = '1';
                 photoArea.style.background = `linear-gradient(135deg, ${getGradientColor(index)}, ${getGradientColor(index, true)})`;
@@ -881,7 +915,6 @@
                 photoArea.style.fontSize = '60px';
                 photoArea.style.color = getIconColor(index);
                 
-                // Dapatkan ikon
                 let iconChar = '📸';
                 if (iconClass.includes('camera-retro')) iconChar = '📷';
                 else if (iconClass.includes('umbrella-beach')) iconChar = '🏖️';
@@ -892,7 +925,6 @@
                 
                 photoArea.innerText = iconChar;
                 
-                // Caption
                 const captionDiv = document.createElement('div');
                 captionDiv.style.textAlign = 'center';
                 captionDiv.style.marginTop = '10px';
@@ -906,11 +938,9 @@
                 frame.appendChild(polaroid);
             });
             
-            // Tambahkan ke container hidden
             downloadContainer.innerHTML = '';
             downloadContainer.appendChild(frame);
             
-            // Gunakan html2canvas untuk capture
             import('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js').then(() => {
                 html2canvas(frame, {
                     scale: 2,
@@ -919,16 +949,12 @@
                     allowTaint: false,
                     useCORS: true
                 }).then(canvas => {
-                    // Download
                     const link = document.createElement('a');
                     link.download = `photobooth-frame-${Date.now()}.png`;
                     link.href = canvas.toDataURL('image/png');
                     link.click();
                     
-                    // Bersihkan
                     downloadContainer.innerHTML = '';
-                    
-                    // Confetti
                     confetti({ particleCount: 50, spread: 70, origin: { y: 0.6 }, colors: ['#fda4af', '#f472b6'] });
                 });
             }).catch(err => {
@@ -937,7 +963,6 @@
             });
         }
 
-        // Helper functions untuk gradient
         function getGradientColor(index, isLight = false) {
             const colors = [
                 ['#fce7f3', '#fbcfe8'],
@@ -955,11 +980,14 @@
             return colors[index % colors.length];
         }
 
-        // Autoplay fallback
-        window.addEventListener('click', () => {
+        window.addEventListener('click', function firstClick() {
             if (!isPlaying && audio.paused) { 
-                audio.play().then(() => { isPlaying=true; updateUI(); }).catch(e=>{});
+                audio.play().then(() => { 
+                    isPlaying=true; 
+                    updateUI(); 
+                }).catch(e=>{});
             }
+            window.removeEventListener('click', firstClick);
         }, { once: true });
 
     </script>
